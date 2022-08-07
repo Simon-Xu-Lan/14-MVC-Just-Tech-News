@@ -58,6 +58,7 @@ router.get('/:id', (req, res) => {
     })
 });
 
+// signup 
 router.post('/', (req, res) => {
     console.log(req.body)
     User.create({
@@ -65,7 +66,15 @@ router.post('/', (req, res) => {
         email: req.body.email,
         password: req.body.password
     })
-    .then(dbUserData => res.json(dbUserData))
+    .then(dbUserData => {
+        req.session.save( () => {
+            req.session.user_id = dbUserData.id;
+            req.session.username = dbUserData.username;
+            req.session.loggedIn = true;
+
+            res.json(dbUserData)
+        })
+    })
     .catch(err => {
         console.log(err);
         res.status(500).json(err);
@@ -82,6 +91,7 @@ which makes it a more secure way of transferring data from the client to the ser
 Remember, the password is still in plaintext, 
 which makes this transmission process a vulnerable link in the chain.
 */
+// login
 router.post('/login', (req, res) => {
     User.findOne({
         where: {
@@ -94,20 +104,40 @@ router.post('/login', (req, res) => {
             return;
         }
         
-        console.log(dbUserData)
-        console.log(req.body)
         // verify user
         const validPassword = dbUserData.checkPassword(req.body.password);
-        console.log(validPassword)
         if(!validPassword) {
             res.status(400).json( {message: 'Incorrect password!'})
             return;
         }
 
-        res.json({ user: dbUserData, message: 'You are now logged in!'});
+        req.session.save( () => {
+            // declare session variables
+            req.session.user_id = dbUserData.id;
+            req.session.username = dbUserData.username;
+            req.session.loggedIn = true;
+
+            res.json({ user: dbUserData, message: 'You are now logged in!'});
+        })
+
 
     })
 })
+
+// Logout/POST
+router.post('/logout', (req,res) => {
+    if (req.session.loggedIn) {
+        // destory() method to clear the session
+        req.session.destroy( () => {
+            // we send back a 204 status code after the session has successfully been destroyed.
+            res.status(204).end();
+        })
+    }
+    else {
+        res.status(404).end();
+    }
+
+});
 
 router.put('/:id', (req, res) => {
     // This .update() method combines the parameters for creating data and looking up data. 

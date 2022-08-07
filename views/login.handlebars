@@ -1,0 +1,51 @@
+<form class="login-form">
+    <div>
+        <label for="email-login">email:</label>
+        <input type="text" id="email-login"/>
+    </div>
+    <div>
+        <label for="password-login">password:</label>
+        <input type="password" id="password-login"/>
+    </div>
+    <div>
+        <button type="submit">login</button>
+    </div>
+</form>
+
+<form class="signup-form">
+    <div>
+        <label for="username-signup">username:</label>
+        <input type="text" id="username-signup"/>
+    </div>
+    <div>
+        <label for="email-signup">email:</label>
+        <input type="text" id="email-signup"/>
+    </div>
+    <div>
+        <label for="password-signup">password:</label>
+        <input type="password" id="password-signup"/>
+    </div>
+    <div>
+        <button type="submit">signup</button>
+    </div>
+</form>
+<script src="/javascript/login.js"></script>
+{{!-- make sure you've linked to the file with / and not ./ --}}
+
+
+
+{{!-- 
+Now where can we put the script tag for this JavaScript file? 
+If we put it in main.handlebars, then every page will load this script. 
+We want to avoid this if possible because the homepage doesn't need login.js. 
+Instead, we can add it to the login.handlebars file. 
+This file doesn't have a header, so we can just add the tag to the bottom of the file.
+
+Remember to give the absolute path, not the relative file path.
+
+It's important to keep in mind that the front-end JavaScript code will not 
+be sent over to the client at the same time as the HTML content. 
+The browser will make a new request for the JavaScript file after 
+the template has rendered and it sees the linked <script> element. 
+--}}
+
