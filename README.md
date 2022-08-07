@@ -159,3 +159,5 @@ router.post('/login', (req, res) => {
 - replace() removes the current URL from the document history.
 - With replace() it is not possible to use "back" to navigate back to the original document.
 - The replace() method of the Location interface replaces the current resource with the one at the provided URL. The difference from the assign() method is that after using replace() the current page will not be saved in session History, meaning the user won't be able to use the back button to navigate to it.
+
+### ignore node modules
