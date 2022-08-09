@@ -132,13 +132,26 @@ router.post('/', (req, res) => {
 // ##  Just remember, because we've updated the relationships between the tables, we need to use sequelize.sync({ force: true }) in server.js to drop the tables and recreate them!
 //  - Like earlier, once you turn on the server with sequelize.sync({ force: true }) and confirm the database tables were recreated, switch back to using { force: false } and restart the server one more time just to make sure the changes took hold and you don't accidentally remove data!
 router.put('/upvote', (req, res) => {
+    console.log(req.session)
+    // make sure the session exists first
+    if (req.session) {
+        // pass session id along with all destructured properties on req.body
+        Post.upvote({...req.body, user_id: req.session.user_id}, { Vote, Comment, User})
+            .then(updatedVoteData => res.json(updatedVoteData))
+            .catch( err => {
+                console.log(err);
+                res.status(500).json(err);
+            })
+    }
+
     // customer static method  created in models/Post.js
-    Post.upvote(req.body, { Vote })
-        .then(updatedPostData => res.json(updatedPostData))
-        .catch(err => {
-            console.log(err);
-            res.status(400).json(err);
-        });
+    // Post.upvote(req.body, { Vote })
+    //     .then(updatedPostData => res.json(updatedPostData))
+    //     .catch(err => {
+    //         console.log(err);
+    //         res.status(400).json(err);
+    //     });
+
     // See how much cleaner this looks now? By creating all of that complicated code at the model level, now we have a much more readable method to use in the route.
 
     // Vote.create({
